@@ -14,7 +14,11 @@ data class GitHubRepo(
     @PrimaryKey
     val name: String,
 
-    @Json(name = "html_url") val url: String,
+    @Json(name = "html_url")
+    val url: String,
+
     val description: String?,
-    @Json(name = "stargazers_count") val stars: Int
+
+    @Json(name = "stargazers_count")
+    val stars: Int
 ) : java.io.Serializable

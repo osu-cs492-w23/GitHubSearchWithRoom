@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import com.example.githubsearchwithroom.R
 import com.example.githubsearchwithroom.data.GitHubRepo
@@ -18,6 +19,8 @@ const val EXTRA_GITHUB_REPO = "GITHUB_REPO"
 class RepoDetailActivity : AppCompatActivity() {
     private var repo: GitHubRepo? = null
     private var isBookmarked = false
+
+    private val viewModel: BookmarkedReposViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,12 +78,14 @@ class RepoDetailActivity : AppCompatActivity() {
             menuItem.isChecked = isBookmarked
             when (isBookmarked) {
                 true -> {
+                    viewModel.addBookmarkedRepo(repo!!)
                     menuItem.icon = AppCompatResources.getDrawable(
                         this,
                         R.drawable.ic_action_bookmark_on
                     )
                 }
                 false -> {
+                    viewModel.removeBookmarkedRepo(repo!!)
                     menuItem.icon = AppCompatResources.getDrawable(
                         this,
                         R.drawable.ic_action_bookmark_off
