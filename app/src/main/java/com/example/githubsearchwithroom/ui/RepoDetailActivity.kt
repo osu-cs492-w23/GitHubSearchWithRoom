@@ -44,6 +44,28 @@ class RepoDetailActivity : AppCompatActivity() {
      */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_repo_detail, menu)
+
+        val bookmarkAction = menu?.findItem(R.id.action_bookmark)
+        viewModel.getBookmarkedRepoByName(repo!!.name).observe(this) { bookmarkedRepo ->
+            when (bookmarkedRepo) {
+                null -> {
+                    isBookmarked = false
+                    bookmarkAction?.isChecked = false
+                    bookmarkAction?.icon = AppCompatResources.getDrawable(
+                        this,
+                        R.drawable.ic_action_bookmark_off
+                    )
+                }
+                else -> {
+                    isBookmarked = true
+                    bookmarkAction?.isChecked = true
+                    bookmarkAction?.icon = AppCompatResources.getDrawable(
+                        this,
+                        R.drawable.ic_action_bookmark_on
+                    )
+                }
+            }
+        }
         return true
     }
 
@@ -74,22 +96,12 @@ class RepoDetailActivity : AppCompatActivity() {
      */
     private fun toggleRepoBookmark(menuItem: MenuItem) {
         if (repo != null) {
-            isBookmarked = !isBookmarked
-            menuItem.isChecked = isBookmarked
             when (isBookmarked) {
-                true -> {
-                    viewModel.addBookmarkedRepo(repo!!)
-                    menuItem.icon = AppCompatResources.getDrawable(
-                        this,
-                        R.drawable.ic_action_bookmark_on
-                    )
-                }
                 false -> {
+                    viewModel.addBookmarkedRepo(repo!!)
+                }
+                true -> {
                     viewModel.removeBookmarkedRepo(repo!!)
-                    menuItem.icon = AppCompatResources.getDrawable(
-                        this,
-                        R.drawable.ic_action_bookmark_off
-                    )
                 }
             }
         }

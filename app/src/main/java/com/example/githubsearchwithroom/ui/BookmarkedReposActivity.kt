@@ -3,12 +3,14 @@ package com.example.githubsearchwithroom.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubsearchwithroom.R
 import com.example.githubsearchwithroom.data.GitHubRepo
 
 class BookmarkedReposActivity : AppCompatActivity() {
+    private val viewModel: BookmarkedReposViewModel by viewModels()
     private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
     private lateinit var bookmarkedReposRV: RecyclerView
 
@@ -22,7 +24,11 @@ class BookmarkedReposActivity : AppCompatActivity() {
         bookmarkedReposRV = findViewById(R.id.rv_bookmarked_repos)
         bookmarkedReposRV.layoutManager = LinearLayoutManager(this)
         bookmarkedReposRV.setHasFixedSize(true)
-        bookmarkedReposRV.adapter = this.repoListAdapter
+        bookmarkedReposRV.adapter = repoListAdapter
+
+        viewModel.bookmarkedRepos.observe(this) { bookmarkedRepos ->
+            repoListAdapter.updateRepoList(bookmarkedRepos)
+        }
     }
 
     /**
